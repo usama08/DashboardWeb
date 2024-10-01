@@ -4,12 +4,24 @@ class StoreScreen extends StatelessWidget {
   // Sample data for stores and their associated names
   final List<Map<String, dynamic>> stores = [
     {
-      'storeName': 'Hamza',
+      'storeName': 'Mubeeen',
+      'associatedNames': ['Credit 200', 'Deposit 1000']
+    },
+    {
+      'storeName': 'Hamza Store',
       'associatedNames': ['Ali', 'Amjad']
     },
     {
-      'storeName': 'Zayan',
+      'storeName': 'Zayan Store',
       'associatedNames': ['Shahzaib', 'Talha', 'Afzal', 'Manan']
+    },
+    {
+      'storeName': 'Ali Store',
+      'associatedNames': ['Payment Credit', 'Payment Deposit']
+    },
+    {
+      'storeName': 'Raheem Store',
+      'associatedNames': ['Store 1', 'Store 2', 'Store 3', 'Store 4']
     },
   ];
 

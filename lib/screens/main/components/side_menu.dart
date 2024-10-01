@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../documents/document_screeen.dart';
+import '../../notifications/notifications.dart';
+import '../../profile/profile_screen.dart';
 import '../../store/store_screen.dart';
 import '../../task/task_screen.dart';
 import '../../transactions/transaction_screen.dart';
@@ -60,12 +62,20 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "Notification",
             svgSrc: "assets/icons/menu_notification.svg",
-            press: () {},
+            press: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationScreen()));
+            },
           ),
           DrawerListTile(
             title: "Profile",
             svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            press: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfileScreen()));
+            },
           ),
           DrawerListTile(
             title: "Settings",
