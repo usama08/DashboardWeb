@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.dashboarweb"
+    namespace = "dashboarweb.com"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.dashboarweb"
+        applicationId = "dashboarweb.com"
         minSdk = 23
         targetSdk = 34
         versionCode = flutter.versionCode

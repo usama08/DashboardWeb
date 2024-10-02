@@ -1,4 +1,4 @@
-package com.example.dashboarweb
+package dashboarweb.com
 
 import io.flutter.embedding.android.FlutterActivity
 

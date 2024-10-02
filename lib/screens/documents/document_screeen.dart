@@ -45,7 +45,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           isUploading = true;
         });
 
-        await Future.delayed(Duration(seconds: 2)); // Simulated upload delay
+        await Future.delayed(Duration(seconds: 2));
 
         // Add to document list (store bytes and url)
         setState(() {
