@@ -1,5 +1,11 @@
+import 'package:dashboarweb/screens/dashboard/components/viewall/addcredituser.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/allseller.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/amount.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/credit.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/sales.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
 import '../../../constants.dart';
 import '../../../models/my_files.dart';
 import '../../../responsive.dart';
@@ -30,7 +36,9 @@ class MyFiles extends StatelessWidget {
                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Get.to(CreditFormScreen());
+              },
               icon: Icon(Icons.add),
               label: Text("Add New"),
             ),
@@ -74,7 +82,33 @@ class FileInfoCardGridView extends StatelessWidget {
         mainAxisSpacing: defaultPadding,
         childAspectRatio: childAspectRatio,
       ),
-      itemBuilder: (context, index) => FileInfoCard(info: demoMyFiles[index]),
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () {
+          // Navigate only if the title is "Seller"
+          if (demoMyFiles[index].title == "Seller") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SellerScreen()),
+            );
+          } else if (demoMyFiles[index].title == "Collections") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AmountCollection()),
+            );
+          } else if (demoMyFiles[index].title == "Credit") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreditScreen()),
+            );
+          } else if (demoMyFiles[index].title == "Sales") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SalesScreen()),
+            );
+          }
+        },
+        child: FileInfoCard(info: demoMyFiles[index]),
+      ),
     );
   }
 }
