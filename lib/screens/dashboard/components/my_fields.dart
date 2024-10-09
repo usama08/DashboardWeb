@@ -1,14 +1,14 @@
 import 'package:dashboarweb/screens/dashboard/components/viewall/addcredituser.dart';
-import 'package:dashboarweb/screens/dashboard/components/viewall/allseller.dart';
 import 'package:dashboarweb/screens/dashboard/components/viewall/amount.dart';
 import 'package:dashboarweb/screens/dashboard/components/viewall/credit.dart';
 import 'package:dashboarweb/screens/dashboard/components/viewall/sales.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/salesform.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
 import '../../../constants.dart';
 import '../../../models/my_files.dart';
 import '../../../responsive.dart';
+import '../../motor/motor_insurance.dart';
 import 'file_info_card.dart';
 
 class MyFiles extends StatelessWidget {
@@ -25,7 +25,7 @@ class MyFiles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "My Files",
+              "Insurance Policy",
               style: Theme.of(context).textTheme.titleMedium,
             ),
             ElevatedButton.icon(
@@ -85,11 +85,8 @@ class FileInfoCardGridView extends StatelessWidget {
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           // Navigate only if the title is "Seller"
-          if (demoMyFiles[index].title == "Seller") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SellerScreen()),
-            );
+          if (demoMyFiles[index].title == "Motor Insurance") {
+            Get.to(VehicleFormScreen());
           } else if (demoMyFiles[index].title == "Collections") {
             Navigator.push(
               context,

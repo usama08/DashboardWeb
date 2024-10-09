@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-// Define a product class to structure the product data
 class Product {
   final String name;
   final String description;
   final double price;
-  final String imageUrl; // URL or asset path for product image
+  final String imageUrl;
 
   Product({
     required this.name,

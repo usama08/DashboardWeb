@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-
 import '../../../../Firebase/db_connection.dart';
-import '../widgets/payslip.dart'; // Make sure this import is present
+import '../widgets/payslip.dart';
 
 class CreditScreen extends StatefulWidget {
   @override
@@ -22,6 +20,7 @@ class _CreditScreenState extends State<CreditScreen> {
   @override
   void initState() {
     super.initState();
+    // Fetch credit details when the screen is initialized
     creditDetails = _firestoreService.getAllCreditDetails();
   }
 
@@ -126,103 +125,106 @@ class _CreditScreenState extends State<CreditScreen> {
   // Add Deposit Form
   void _showAddDepositForm(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Add Deposit'),
-            content: FutureBuilder<List<Map<String, dynamic>>>(
-              future: creditDetails,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Deposit'),
+          content: FutureBuilder<List<Map<String, dynamic>>>(
+            future: creditDetails,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text('No credit details found.');
-                }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Text('No credit details found.');
+              }
 
-                final credits = snapshot.data!;
+              final credits = snapshot.data!;
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Dropdown to select user
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Select User'),
-                      items: credits.map((credit) {
-                        return DropdownMenuItem<String>(
-                          value: credit['creditName'],
-                          child: Text(credit['creditName']),
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Dropdown to select user
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(labelText: 'Select User'),
+                    items: credits.map((credit) {
+                      return DropdownMenuItem<String>(
+                        value: credit['creditName'],
+                        child: Text(credit['creditName']),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedUser = value;
+
+                        // Find the selected user's data and update the current credit amount
+                        final selectedCredit = credits.firstWhere(
+                          (credit) => credit['creditName'] == value,
                         );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedUser = value;
+                        selectedUserId =
+                            selectedCredit['userId']; // Firestore document ID
+                        currentCreditAmount = double.tryParse(
+                                selectedCredit['creditAmount'].toString()) ??
+                            0.0;
 
-                          // Find the selected user's data and update the current credit amount
-                          final selectedCredit = credits.firstWhere(
-                              (credit) => credit['creditName'] == value);
-                          selectedUserId =
-                              selectedCredit['userId']; // Firestore document ID
-                          currentCreditAmount = double.tryParse(
-                                  selectedCredit['creditAmount'].toString()) ??
-                              0.0;
+                        // Debugging: Print the selected user and current credit amount
+                        print('Selected user: $selectedUser');
+                        print('User ID: $selectedUserId');
+                        print('Current credit amount: $currentCreditAmount');
+                      });
+                    },
+                  ),
 
-                          // Debugging: Print the selected user and current credit amount
-                          print('Selected user: $selectedUser');
-                          print('User ID: $selectedUserId');
-                          print('Current credit amount: $currentCreditAmount');
-                        });
-                      },
+                  // Deposit Amount Input
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Deposit Amount',
+                      hintText: 'Enter deposit',
                     ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        depositAmount = double.tryParse(value);
 
-                    // Deposit Amount Input
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Deposit Amount',
-                        hintText: 'Enter deposit',
-                      ),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        setState(() {
-                          depositAmount = double.tryParse(value);
+                        // Debugging: Print the deposit amount
+                        print('Deposit amount: $depositAmount');
+                      });
+                    },
+                  ),
 
-                          // Debugging: Print the deposit amount
-                          print('Deposit amount: $depositAmount');
-                        });
-                      },
-                    ),
-
-                    // Show updated balance
-                    Text(
-                        "Balance: ${currentCreditAmount != null && depositAmount != null ? (currentCreditAmount! + depositAmount!).toString() : currentCreditAmount.toString()}"),
-                  ],
-                );
+                  // Show updated balance
+                  Text(
+                      "Balance: ${currentCreditAmount != null && depositAmount != null ? (currentCreditAmount! + depositAmount!).toString() : currentCreditAmount.toString()}"),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _submitDeposit();
               },
+              child: Text('Submit'),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  submitDeposit();
-                },
-                child: Text('Submit'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Cancel'),
-              ),
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  Future<void> submitDeposit() async {
+  // Submit Deposit and update Firestore
+  Future<void> _submitDeposit() async {
     // Check that both selectedUserId and depositAmount are not null
     if (selectedUserId != null && depositAmount != null) {
       try {
@@ -235,6 +237,7 @@ class _CreditScreenState extends State<CreditScreen> {
         // Calculate new credit amount
         double newCreditAmount = currentCreditAmount! + depositAmount!;
         print("newcreidtamount$newCreditAmount");
+
         // Update the existing document with the new credit amount
         await amountCollection.doc(selectedUserId).update({
           'creditAmount': newCreditAmount,
@@ -250,7 +253,6 @@ class _CreditScreenState extends State<CreditScreen> {
         print('Error updating credit amount: $e');
       }
     } else {
-      // Display a message to the user if no user or deposit amount is selected
       print('User or deposit amount is not selected');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Please select a user and enter a deposit amount.'),
