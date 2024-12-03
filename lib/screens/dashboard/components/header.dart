@@ -1,5 +1,9 @@
+import 'package:dashboarweb/screens/Auth/controller/authcontroller.dart';
+import 'package:dashboarweb/screens/Auth/logindemo.dart';
+import 'package:dashboarweb/screens/dashboard/components/widgets/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../controllers/menu_app_controller.dart';
@@ -27,16 +31,24 @@ class Header extends StatelessWidget {
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
         Expanded(child: SearchField()),
-        ProfileCard()
+        ProfileCard(),
       ],
     );
   }
 }
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   const ProfileCard({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<ProfileCard> createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  var authcontroller = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,14 +65,15 @@ class ProfileCard extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            "assets/images/osama.jpg",
+            "assets/images/user.png",
             height: 38,
           ),
           if (!Responsive.isMobile(context))
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Osama Razzaq"),
+              child: Text(
+                  authcontroller.userData.value['PortalUsername'].toString()),
             ),
           Icon(Icons.keyboard_arrow_down),
         ],
@@ -86,7 +99,9 @@ class SearchField extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         suffixIcon: InkWell(
-          onTap: () {},
+          onTap: () {
+            Get.to(MylogIn());
+          },
           child: Container(
             padding: EdgeInsets.all(defaultPadding * 0.75),
             margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),

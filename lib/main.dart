@@ -1,4 +1,3 @@
-import 'package:dashboarweb/screens/Auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -6,11 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart'; // Import GetX
 import 'constants.dart';
 import 'controllers/menu_app_controller.dart';
+import 'screens/Authinsurance/view/auth/registration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure binding is initialized
-
-  // Ensure Firebase is initialized with the Firebase options for web
   await Firebase.initializeApp(
     options: FirebaseOptions(
       apiKey: "AIzaSyC0NyBI9wy66gCNUgXumHP0ea_Q8kkRP3M",
@@ -47,6 +45,6 @@ class MyApp extends StatelessWidget {
               .apply(bodyColor: Colors.white),
           canvasColor: secondaryColor,
         ),
-        home: LoginScreen());
+        home: RegistrationScreen());
   }
 }

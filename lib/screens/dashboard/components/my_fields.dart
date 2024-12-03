@@ -1,15 +1,15 @@
 import 'package:dashboarweb/screens/dashboard/components/viewall/addcredituser.dart';
-import 'package:dashboarweb/screens/dashboard/components/viewall/amount.dart';
-import 'package:dashboarweb/screens/dashboard/components/viewall/credit.dart';
-import 'package:dashboarweb/screens/dashboard/components/viewall/sales.dart';
-import 'package:dashboarweb/screens/dashboard/components/viewall/salesform.dart';
+import 'package:dashboarweb/screens/dashboard/components/viewall/travelling.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../constants.dart';
 import '../../../models/my_files.dart';
 import '../../../responsive.dart';
-import '../../motor/motor_insurance.dart';
+import '../../Healthinsurance/health_insurance.dart';
+import '../../lifeinsurance/life_insurance.dart';
+import '../../AllInsurance/allinsurance.dart';
 import 'file_info_card.dart';
+import 'widgets/chat_screen.dart';
 
 class MyFiles extends StatelessWidget {
   const MyFiles({
@@ -37,10 +37,12 @@ class MyFiles extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Get.to(CreditFormScreen());
+                Get.to(
+                  ChatScreen(),
+                );
               },
-              icon: Icon(Icons.add),
-              label: Text("Add New"),
+              icon: Icon(Icons.chat),
+              label: Text("Admin"),
             ),
           ],
         ),
@@ -85,22 +87,22 @@ class FileInfoCardGridView extends StatelessWidget {
       itemBuilder: (context, index) => GestureDetector(
         onTap: () {
           // Navigate only if the title is "Seller"
-          if (demoMyFiles[index].title == "Motor Insurance") {
+          if (demoMyFiles[index].title == "Select Insurance") {
             Get.to(VehicleFormScreen());
-          } else if (demoMyFiles[index].title == "Collections") {
+          } else if (demoMyFiles[index].title == "Decline Insurance") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AmountCollection()),
+              MaterialPageRoute(builder: (context) => LifeInsuranceScreen()),
             );
-          } else if (demoMyFiles[index].title == "Credit") {
+          } else if (demoMyFiles[index].title == "Health Insurance") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CreditScreen()),
+              MaterialPageRoute(builder: (context) => HealthInsuranceForm()),
             );
-          } else if (demoMyFiles[index].title == "Sales") {
+          } else if (demoMyFiles[index].title == "Travelling Insurance") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SalesScreen()),
+              MaterialPageRoute(builder: (context) => TravellingInsurance()),
             );
           }
         },
